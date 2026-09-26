@@ -1,0 +1,9 @@
+# Larastan の設定は phpstan/extension-installer が自動で読み込む
+parameters:
+    level: 5
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests

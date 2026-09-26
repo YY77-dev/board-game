@@ -1,0 +1,6 @@
+# Windows と macOS の両方で作業するため、改行コードを LF にそろえる
+* text=auto eol=lf
+
+# Windows 専用のスクリプトだけは CRLF のままにする
+*.bat text eol=crlf
+*.cmd text eol=crlf

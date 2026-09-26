@@ -1,0 +1,56 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${BACKEND_PORT:-8000}:80"
+    volumes:
+      - ./backend/public:/app/public:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: ./docker/backend
+    volumes:
+      - ./backend:/app
+      # vendor は匿名ボリュームにして、ホストの backend/vendor と分ける
+      - /app/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      # 初回起動は composer install が走るので長めに待つ
+      start_period: 300s
+
+  db:
+    image: mysql:8.4
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.91.0.0/24

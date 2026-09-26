@@ -1,0 +1,23 @@
+# frontend と backend それぞれの除外設定は各フォルダの .gitignore に書く
+
+# OS が作るファイル
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# エディタ
+.idea/
+*.swp
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# リポジトリ直下の Node。Playwright 用
+/node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# docker compose のポートなどを上書きするときに置くファイル
+/.env

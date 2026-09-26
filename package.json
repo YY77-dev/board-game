@@ -1,0 +1,8 @@
+{
+  "name": "board-game",
+  "private": true,
+  "packageManager": "pnpm@9.12.1",
+  "devDependencies": {
+    "@playwright/test": "1.49.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  // ESLint の設定ファイルは frontend にあるので、フォルダごとに探させる
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  // Tailwind CSS v4 の補完に使う CSS の入口
+  "tailwindCSS.experimental.configFile": "frontend/src/app/globals.css"
+}
