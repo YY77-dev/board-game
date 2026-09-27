@@ -3,7 +3,8 @@ set -e
 
 cd /app
 
-# storage/ と bootstrap/cache/ を作り、php-fpm から書き込めるようにする
+# storage/ と bootstrap/cache/ を作り、php-fpm から書き込めるようにする。
+# ファイルに実行権限が付くと Git が変更として検出するので、X でフォルダだけに付ける
 mkdir -p \
   storage/app/public \
   storage/framework/cache/data \
@@ -11,7 +12,7 @@ mkdir -p \
   storage/framework/views \
   storage/logs \
   bootstrap/cache
-chmod -R 777 storage bootstrap/cache
+chmod -R a+rwX storage bootstrap/cache
 
 # .env が無ければ .env.example をコピーする
 if [ ! -f .env ]; then
