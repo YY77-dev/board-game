@@ -8,26 +8,26 @@ import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/c
 import { Notifications } from '@mantine/notifications';
 
 export const metadata: Metadata = {
-  title: 'My App',
-  description: '',
+    title: 'My App',
+    description: '',
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="ja" {...mantineHtmlProps}>
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <MantineProvider>
-          <Notifications />
-          {children}
-        </MantineProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="ja" {...mantineHtmlProps}>
+            <head>
+                <ColorSchemeScript />
+            </head>
+            <body>
+                <MantineProvider>
+                    <Notifications />
+                    {children}
+                </MantineProvider>
+            </body>
+        </html>
+    );
 }
