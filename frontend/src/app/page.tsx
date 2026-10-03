@@ -1,9 +1,7 @@
-// 
-
 import Link from "next/link";
 import { Button } from "@mantine/core";
 
-export default function LightsOut() {
+export default function Home() {
     return (
         <>
             <Link href="/lights-out">
