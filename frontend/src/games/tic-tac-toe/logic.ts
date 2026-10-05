@@ -31,19 +31,28 @@ export function getCurrentPlayer(board: Board): Player {
     return currentPlayer;
 }
 
-export function getWinner(board: Board): Player | null {
-    for (const [[row1, col1], [row2, col2], [row3, col3]] of LINES) {
+export function getWinningLine(board: Board): Line | null {
+    for (const line of LINES) {
+        const [[row1, col1], [row2, col2], [row3, col3]] = line;
         const cell1 = board[row1][col1];
         const cell2 = board[row2][col2];
         const cell3 = board[row3][col3];
 
-        if (cell1 !== null && cell1 === cell2 && cell1 === cell3) return cell1;
+        if (cell1 !== null && cell1 === cell2 && cell1 === cell3) return line;
     }
     return null;
 }
 
+export function getWinner(board: Board): Player | null {
+    const winningLine = getWinningLine(board);
+    if (winningLine === null) return null;
+    const [row, col] = winningLine[0];
+    const winner = board[row][col];
+    return winner;
+}
+
 export function play(board: Board, row: number, col: number): Board {
-    if (board[row][col] !== null || getWinner(board) !== null) return board;
+    if (board[row][col] !== null || getWinningLine(board) !== null) return board;
     const mark = getCurrentPlayer(board);
     const newBoard = board.map((cells) => cells.slice());
     newBoard[row][col] = mark;
