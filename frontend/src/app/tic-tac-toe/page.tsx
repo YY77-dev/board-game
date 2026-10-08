@@ -5,29 +5,38 @@ import { Button } from "@mantine/core";
 import { type Player, type Line, createEmptyBoard, getCurrentPlayer, getWinningLine, getWinner, isDraw, play } from "@/games/tic-tac-toe/logic";
 
 const CELL_CENTER: number = 0.5;
+const LINE_EXTENSION = 0.4;
 
 export default function TicTacToe() {
     const [board, setBoard] = useState(createEmptyBoard);
     
     const currentPlayer: Player = getCurrentPlayer(board);
     const winner: Player | null = getWinner(board);
-    const draw: boolean = isDraw(board);
-    const isGameOver: boolean = winner !== null || draw;
-    
+    const isTieGame: boolean = isDraw(board);
+    const isGameOver: boolean = winner !== null || isTieGame;
+
     let statusMessage: string;
     if (winner !== null) {
         statusMessage = `${winner}の勝ち！`;
-    } else if (draw) {
+    } else if (isTieGame) {
         statusMessage = '引き分け！';
     } else {
         statusMessage = `${currentPlayer}の番`;
     }
 
     const winningLine: Line | null = getWinningLine(board);
-    const winningCoordinateRow1: number = winningLine?.[0][0] ?? 0;
-    const winningCoordinateCol1: number = winningLine?.[0][1] ?? 0;
-    const winningCoordinateRow2: number = winningLine?.[2][0] ?? 0;
-    const winningCoordinateCol2: number = winningLine?.[2][1] ?? 0;
+    const winningLineStartRow: number = winningLine?.[0][0] ?? 0;
+    const winningLineStartCol: number = winningLine?.[0][1] ?? 0;
+    const winningLineEndRow: number = winningLine?.[2][0] ?? 0;
+    const winningLineEndCol: number = winningLine?.[2][1] ?? 0;
+
+    const directionRow: number = Math.sign(winningLineEndRow - winningLineStartRow);
+    const directionCol: number = Math.sign(winningLineEndCol - winningLineStartCol);
+
+    const startRow: number = winningLineStartRow + CELL_CENTER - LINE_EXTENSION * directionRow;
+    const startCol: number = winningLineStartCol + CELL_CENTER - LINE_EXTENSION * directionCol;
+    const endRow: number = winningLineEndRow + CELL_CENTER + LINE_EXTENSION * directionRow;
+    const endCol: number = winningLineEndCol + CELL_CENTER + LINE_EXTENSION * directionCol;
     
     const handlePlay = (rowIndex: number, colIndex: number) => {
         setBoard(play(board, rowIndex, colIndex));
@@ -57,7 +66,7 @@ export default function TicTacToe() {
                 </div>
                 {winningLine && (
                     <svg viewBox="0 0 3 3" className="absolute inset-0 w-full h-full pointer-events-none">
-                        <line x1={winningCoordinateCol1 + CELL_CENTER} y1={winningCoordinateRow1 + CELL_CENTER} x2={winningCoordinateCol2 + CELL_CENTER} y2={winningCoordinateRow2 + CELL_CENTER} stroke="red" strokeWidth={0.1} strokeLinecap="round" />
+                        <line x1={startCol} y1={startRow} x2={endCol} y2={endRow} stroke="red" strokeWidth={0.1} strokeLinecap="round" />
                     </svg>
                 )}
             </div>
