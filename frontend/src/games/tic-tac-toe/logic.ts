@@ -58,3 +58,9 @@ export function play(board: Board, row: number, col: number): Board {
     newBoard[row][col] = mark;
     return newBoard;
 }
+
+export function isDraw(board: Board): boolean {
+    const isFull = board.flat().every((cell) => cell !== null);
+    const hasWinner = getWinner(board) !== null;
+    return isFull && !hasWinner;
+}
