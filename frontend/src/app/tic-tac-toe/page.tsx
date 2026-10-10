@@ -47,8 +47,8 @@ export default function TicTacToe() {
     };
 
     return (
-        <>
-            <h1>三目並べ</h1>
+        <div className="flex flex-col items-center">
+            <h1>○×ゲーム</h1>
             <p>{statusMessage}</p>
             <div className="relative w-fit">
                 <div className="grid grid-cols-3">
@@ -56,7 +56,11 @@ export default function TicTacToe() {
                         return (
                             row.map((cell, colIndex) => {
                                 return (
-                                    <button key={`${rowIndex}-${colIndex}`} onClick={() => handlePlay(rowIndex, colIndex)} disabled={isGameOver} className="w-25 h-25">
+                                    <button
+                                    key={`${rowIndex}-${colIndex}`}
+                                    onClick={() => handlePlay(rowIndex, colIndex)}
+                                    disabled={isGameOver}
+                                    className="w-25 h-25">
                                         {cell}
                                     </button>
                                 );
@@ -71,6 +75,6 @@ export default function TicTacToe() {
                 )}
             </div>
             <Button onClick={handleReset}>リセット</Button>
-        </>
+        </div>
     );
 }

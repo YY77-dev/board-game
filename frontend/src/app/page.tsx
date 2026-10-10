@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <>
             <Link href="/tic-tac-toe">
-                <Button>三目並べ</Button>
+                <Button>○×ゲーム</Button>
             </Link>
             <Link href="/lights-out">
                 <Button>Lights Out</Button>

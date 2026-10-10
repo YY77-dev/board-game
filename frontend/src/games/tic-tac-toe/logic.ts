@@ -1,4 +1,6 @@
-export type Player = "O" | "X";
+export const CIRCLE = "O";
+export const CROSS = "X";
+export type Player = typeof CIRCLE | typeof CROSS;
 export type Cell = Player | null;
 export type Board = Cell[][];
 export type Coordinate = [number, number];
@@ -27,7 +29,7 @@ export function createEmptyBoard(): Board {
 
 export function getCurrentPlayer(board: Board): Player {
     const filledCell = board.flat().filter((cell) => cell !== null).length;
-    const currentPlayer = filledCell % 2 === 0 ? "O" : "X";
+    const currentPlayer = filledCell % 2 === 0 ? CIRCLE : CROSS;
     return currentPlayer;
 }
 
