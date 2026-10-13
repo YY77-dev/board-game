@@ -7,6 +7,8 @@ import type { Metadata } from 'next';
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
+import { AppLayout } from '@/components/common/layout/AppLayout';
+
 export const metadata: Metadata = {
     title: 'My App',
     description: '',
@@ -20,12 +22,12 @@ export default function RootLayout({
     return (
         <html lang="ja" {...mantineHtmlProps}>
             <head>
-                <ColorSchemeScript />
+                <ColorSchemeScript defaultColorScheme="auto" />
             </head>
             <body>
-                <MantineProvider>
+                <MantineProvider defaultColorScheme="auto">
                     <Notifications />
-                    {children}
+                    <AppLayout>{children}</AppLayout>
                 </MantineProvider>
             </body>
         </html>
