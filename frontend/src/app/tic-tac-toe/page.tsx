@@ -1,28 +1,49 @@
 'use client';
 
-import { useState } from "react";
-import { Button } from "@mantine/core";
-import { type Player, type Line, createEmptyBoard, getCurrentPlayer, getWinningLine, getWinner, isDraw, play } from "@/games/tic-tac-toe/logic";
+import { useState } from 'react';
+import { Button } from '@mantine/core';
+import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
+
+import {
+    type Player,
+    type Line,
+    createEmptyBoard,
+    getCurrentPlayer,
+    getWinningLine,
+    getWinner,
+    isDraw,
+    play,
+} from '@/games/tic-tac-toe/logic';
+
+const MARK_ICONS: Record<Player, TablerIcon> = {
+    O: IconCircle,
+    X: IconX,
+};
 
 const CELL_CENTER: number = 0.5;
-const LINE_EXTENSION = 0.4;
+const LINE_EXTENSION: number = 0.4;
 
 export default function TicTacToe() {
     const [board, setBoard] = useState(createEmptyBoard);
-    
+
     const currentPlayer: Player = getCurrentPlayer(board);
     const winner: Player | null = getWinner(board);
     const isTieGame: boolean = isDraw(board);
     const isGameOver: boolean = winner !== null || isTieGame;
 
-    let statusMessage: string;
+    let statusMark: Player | null;
+    let statusText: string;
     if (winner !== null) {
-        statusMessage = `${winner}の勝ち！`;
+        statusMark = winner;
+        statusText = 'の勝ち！';
     } else if (isTieGame) {
-        statusMessage = '引き分け！';
+        statusMark = null;
+        statusText = '引き分け！';
     } else {
-        statusMessage = `${currentPlayer}の番`;
+        statusMark = currentPlayer;
+        statusText = 'の番';
     }
+    const StatusIcon: TablerIcon | null = statusMark === null ? null : MARK_ICONS[statusMark];
 
     const winningLine: Line | null = getWinningLine(board);
     const winningLineStartRow: number = winningLine?.[0][0] ?? 0;
@@ -37,7 +58,7 @@ export default function TicTacToe() {
     const startCol: number = winningLineStartCol + CELL_CENTER - LINE_EXTENSION * directionCol;
     const endRow: number = winningLineEndRow + CELL_CENTER + LINE_EXTENSION * directionRow;
     const endCol: number = winningLineEndCol + CELL_CENTER + LINE_EXTENSION * directionCol;
-    
+
     const handlePlay = (rowIndex: number, colIndex: number) => {
         setBoard(play(board, rowIndex, colIndex));
     };
@@ -48,29 +69,47 @@ export default function TicTacToe() {
 
     return (
         <div className="flex flex-col items-center">
-            <h1>○×ゲーム</h1>
-            <p>{statusMessage}</p>
+            <h1>Tic Tac Toe</h1>
+            <p className="flex items-center">
+                {StatusIcon && <StatusIcon size={18} />}
+                {statusText}
+            </p>
             <div className="relative w-fit">
                 <div className="grid grid-cols-3">
                     {board.map((row, rowIndex) => {
-                        return (
-                            row.map((cell, colIndex) => {
-                                return (
-                                    <button
+                        return row.map((cell, colIndex) => {
+                            const MarkIcon: TablerIcon | null =
+                                cell === null ? null : MARK_ICONS[cell];
+                            return (
+                                <button
                                     key={`${rowIndex}-${colIndex}`}
                                     onClick={() => handlePlay(rowIndex, colIndex)}
                                     disabled={isGameOver}
-                                    className="w-25 h-25">
-                                        {cell}
-                                    </button>
-                                );
-                            })
-                        );
+                                    className="flex h-25 w-25 items-center justify-center"
+                                >
+                                    {MarkIcon && <MarkIcon size={48} />}
+                                </button>
+                            );
+                        });
                     })}
                 </div>
                 {winningLine && (
-                    <svg viewBox="0 0 3 3" className="absolute inset-0 w-full h-full pointer-events-none">
-                        <line x1={startCol} y1={startRow} x2={endCol} y2={endRow} stroke="red" strokeWidth={0.1} strokeLinecap="round" />
+                    <svg
+                        viewBox="0 0 3 3"
+                        className="pointer-events-none absolute inset-0 h-full w-full"
+                    >
+                        <line
+                            x1={startCol}
+                            y1={startRow}
+                            x2={endCol}
+                            y2={endRow}
+                            pathLength={1}
+                            strokeDasharray={1}
+                            stroke="red"
+                            strokeWidth={0.1}
+                            strokeLinecap="round"
+                            className="draw-line"
+                        />
                     </svg>
                 )}
             </div>

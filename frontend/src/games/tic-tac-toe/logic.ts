@@ -1,5 +1,5 @@
-export const CIRCLE = "O";
-export const CROSS = "X";
+export const CIRCLE = 'O';
+export const CROSS = 'X';
 export type Player = typeof CIRCLE | typeof CROSS;
 export type Cell = Player | null;
 export type Board = Cell[][];
@@ -8,6 +8,7 @@ export type Line = [Coordinate, Coordinate, Coordinate];
 
 const BOARD_SIZE = 3;
 
+// prettier-ignore
 const LINES: Line[] = [
     [[0, 0], [0, 1], [0, 2]],
     [[1, 0], [1, 1], [1, 2]],

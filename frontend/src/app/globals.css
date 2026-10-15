@@ -14,3 +14,26 @@
 
 /* Tailwind の dark: を Mantine のカラースキーム切り替えに連動させる */
 @custom-variant dark (&:where([data-mantine-color-scheme='dark'], [data-mantine-color-scheme='dark'] *));
+
+/*
+ * 勝った並びの線を、端から引いていくように表示するアニメーション。
+ * <line> に pathLength={1} と strokeDasharray={1} を付けて使う前提で、
+ * 破線の模様のずれを 0 に戻していくと、線が伸びて見える。
+ */
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/*
+ * 模様を 1 ずらして、線が見えない状態から始める。
+ * forwards で、引き終わったあとも線が見えたまま止める。
+ * Tailwind のユーティリティで上書きできるように components レイヤーに入れる。
+ */
+@layer components {
+    .draw-line {
+        stroke-dashoffset: 1;
+        animation: draw-line 0.3s ease-out forwards;
+    }
+}
