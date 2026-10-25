@@ -23,7 +23,7 @@ const LINES: Line[] = [
 export function createEmptyBoard(): Board {
     const board: Board = [];
     for (let i = 0; i < BOARD_SIZE; i++) {
-        board.push(Array(BOARD_SIZE).fill(null));
+        board.push(Array<Cell>(BOARD_SIZE).fill(null));
     }
     return board;
 }
@@ -66,4 +66,25 @@ export function isDraw(board: Board): boolean {
     const isFull = board.flat().every((cell) => cell !== null);
     const hasWinner = getWinner(board) !== null;
     return isFull && !hasWinner;
+}
+
+export function getEmptyCells(board: Board): Coordinate[] {
+    const emptyCells: Coordinate[] = [];
+    for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+            if (board[row][col] === null) {
+                emptyCells.push([row, col]);
+            }
+        }
+    }
+    return emptyCells;
+}
+
+export function getRandomMove(board: Board, random: () => number = Math.random): Coordinate | null {
+    const emptyCells = getEmptyCells(board);
+    if (emptyCells.length === 0) {
+        return null;
+    }
+    const randomIndex = Math.floor(random() * emptyCells.length);
+    return emptyCells[randomIndex];
 }

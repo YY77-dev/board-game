@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@mantine/core';
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
 import {
-    type Player,
+    CROSS,
     type Line,
+    type Player,
     createEmptyBoard,
     getCurrentPlayer,
+    getRandomMove,
     getWinningLine,
     getWinner,
     isDraw,
@@ -23,6 +25,9 @@ const MARK_ICONS: Record<Player, TablerIcon> = {
 const CELL_CENTER: number = 0.5;
 const LINE_EXTENSION: number = 0.4;
 
+const CPU_PLAYER: Player = CROSS;
+const CPU_DELAY_MS = 1000;
+
 export default function TicTacToe() {
     const [board, setBoard] = useState(createEmptyBoard);
 
@@ -30,6 +35,7 @@ export default function TicTacToe() {
     const winner: Player | null = getWinner(board);
     const isTieGame: boolean = isDraw(board);
     const isGameOver: boolean = winner !== null || isTieGame;
+    const isCpuTurn: boolean = !isGameOver && currentPlayer === CPU_PLAYER;
 
     let statusMark: Player | null;
     let statusText: string;
@@ -60,8 +66,22 @@ export default function TicTacToe() {
     const endCol: number = winningLineEndCol + CELL_CENTER + LINE_EXTENSION * directionCol;
 
     const handlePlay = (rowIndex: number, colIndex: number) => {
+        if (isCpuTurn) return;
         setBoard(play(board, rowIndex, colIndex));
     };
+
+    useEffect(() => {
+        if (!isCpuTurn) return;
+
+        const cpuTurnTimer = setTimeout(() => {
+            const cpuMove = getRandomMove(board);
+            if (cpuMove !== null) {
+                setBoard(play(board, cpuMove[0], cpuMove[1]));
+            }
+        }, CPU_DELAY_MS);
+
+        return () => clearTimeout(cpuTurnTimer);
+    }, [board, isCpuTurn]);
 
     const handleReset = () => {
         setBoard(createEmptyBoard());
@@ -84,7 +104,7 @@ export default function TicTacToe() {
                                 <button
                                     key={`${rowIndex}-${colIndex}`}
                                     onClick={() => handlePlay(rowIndex, colIndex)}
-                                    disabled={isGameOver}
+                                    disabled={isGameOver || isCpuTurn}
                                     className="flex h-25 w-25 items-center justify-center"
                                 >
                                     {MarkIcon && <MarkIcon size={48} />}
