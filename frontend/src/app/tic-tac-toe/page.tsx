@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@mantine/core';
+import { Button, SegmentedControl } from '@mantine/core';
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
 import {
+    CIRCLE,
     CROSS,
     type Line,
     type Player,
@@ -22,24 +23,33 @@ const MARK_ICONS: Record<Player, TablerIcon> = {
     X: IconX,
 };
 
+const CIRCLE_MARK: TablerIcon = MARK_ICONS[CIRCLE];
+const CROSS_MARK: TablerIcon = MARK_ICONS[CROSS];
+
 const CELL_CENTER: number = 0.5;
 const LINE_EXTENSION: number = 0.4;
 
-const CPU_PLAYER: Player = CROSS;
-const CPU_DELAY_MS = 1000;
+const CPU_DELAY_MS = 500;
 
 export default function TicTacToe() {
     const [board, setBoard] = useState(createEmptyBoard);
+    const [isStarted, setIsStarted] = useState<boolean>(false);
+    const [humanPlayer, setHumanPlayer] = useState<Player>(CIRCLE);
+    const cpuPlayer: Player = humanPlayer === CIRCLE ? CROSS : CIRCLE;
 
     const currentPlayer: Player = getCurrentPlayer(board);
     const winner: Player | null = getWinner(board);
     const isTieGame: boolean = isDraw(board);
     const isGameOver: boolean = winner !== null || isTieGame;
-    const isCpuTurn: boolean = !isGameOver && currentPlayer === CPU_PLAYER;
+    const isPlaying: boolean = isStarted && !isGameOver;
+    const isCpuTurn: boolean = isPlaying && currentPlayer === cpuPlayer;
 
     let statusMark: Player | null;
     let statusText: string;
-    if (winner !== null) {
+    if (!isStarted) {
+        statusMark = null;
+        statusText = '';
+    } else if (winner !== null) {
         statusMark = winner;
         statusText = 'の勝ち！';
     } else if (isTieGame) {
@@ -83,14 +93,42 @@ export default function TicTacToe() {
         return () => clearTimeout(cpuTurnTimer);
     }, [board, isCpuTurn]);
 
+    const handleStarted = () => {
+        setIsStarted(true);
+    };
+
     const handleReset = () => {
+        setIsStarted(false);
         setBoard(createEmptyBoard());
     };
 
     return (
         <div className="flex flex-col items-center">
             <h1>Tic Tac Toe</h1>
-            <p className="flex items-center">
+            <SegmentedControl
+                value={humanPlayer}
+                onChange={setHumanPlayer}
+                disabled={isStarted}
+                data={[
+                    {
+                        label: (
+                            <span className="flex items-center justify-center gap-1">
+                                先攻 :<CIRCLE_MARK size={16} />
+                            </span>
+                        ),
+                        value: CIRCLE,
+                    },
+                    {
+                        label: (
+                            <span className="flex items-center justify-center gap-1">
+                                後攻 :<CROSS_MARK size={16} />
+                            </span>
+                        ),
+                        value: CROSS,
+                    },
+                ]}
+            />
+            <p className="flex min-h-6 items-center">
                 {StatusIcon && <StatusIcon size={18} />}
                 {statusText}
             </p>
@@ -104,7 +142,7 @@ export default function TicTacToe() {
                                 <button
                                     key={`${rowIndex}-${colIndex}`}
                                     onClick={() => handlePlay(rowIndex, colIndex)}
-                                    disabled={isGameOver || isCpuTurn}
+                                    disabled={!isPlaying || isCpuTurn}
                                     className="flex h-25 w-25 items-center justify-center"
                                 >
                                     {MarkIcon && <MarkIcon size={48} />}
@@ -133,7 +171,11 @@ export default function TicTacToe() {
                     </svg>
                 )}
             </div>
-            <Button onClick={handleReset}>リセット</Button>
+            {isStarted ? (
+                <Button onClick={handleReset}>リセット</Button>
+            ) : (
+                <Button onClick={handleStarted}>スタート</Button>
+            )}
         </div>
     );
 }
