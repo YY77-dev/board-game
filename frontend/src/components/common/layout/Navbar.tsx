@@ -17,7 +17,7 @@ type LinkProps = {
 
 export default function Navbar({ onNavigate }: NavbarProps) {
     const links: LinkProps[] = [
-        { href: '/', label: 'home', icon: IconHome },
+        { href: '/', label: 'Home', icon: IconHome },
         { href: '/tic-tac-toe', label: 'Tic Tac Toe', icon: IconTicTac },
         { href: '/lights-out', label: 'Lights-Out', icon: IconBulb },
     ];
