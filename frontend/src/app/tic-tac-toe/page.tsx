@@ -102,13 +102,30 @@ export default function TicTacToe() {
         setBoard(createEmptyBoard());
     };
 
+    const handleReplay = () => {
+        setBoard(createEmptyBoard());
+    };
+
+    let buttonLabel: string;
+    let handleButtonClick: () => void;
+    if (!isStarted) {
+        buttonLabel = 'スタート';
+        handleButtonClick = handleStarted;
+    } else if (isPlaying) {
+        buttonLabel = 'リセット';
+        handleButtonClick = handleReset;
+    } else {
+        buttonLabel = 'リプレイ';
+        handleButtonClick = handleReplay;
+    }
+
     return (
         <div className="flex flex-col items-center">
             <h1>Tic Tac Toe</h1>
             <SegmentedControl
                 value={humanPlayer}
                 onChange={setHumanPlayer}
-                disabled={isStarted}
+                disabled={isPlaying}
                 data={[
                     {
                         label: (
@@ -128,7 +145,7 @@ export default function TicTacToe() {
                     },
                 ]}
             />
-            <p className="flex min-h-6 items-center">
+            <p className="flex min-h-7 items-center">
                 {StatusIcon && <StatusIcon size={18} />}
                 {statusText}
             </p>
@@ -171,11 +188,7 @@ export default function TicTacToe() {
                     </svg>
                 )}
             </div>
-            {isStarted ? (
-                <Button onClick={handleReset}>リセット</Button>
-            ) : (
-                <Button onClick={handleStarted}>スタート</Button>
-            )}
+            <Button onClick={handleButtonClick}>{buttonLabel}</Button>
         </div>
     );
 }
