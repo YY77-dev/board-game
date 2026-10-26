@@ -4,5 +4,8 @@
   // 保存時に ESLint の自動修正をかける(import の並べ替えなど)
   "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
   // Tailwind CSS v4 の補完に使う CSS の入口
-  "tailwindCSS.experimental.configFile": "frontend/src/app/globals.css"
+  "tailwindCSS.experimental.configFile": "frontend/src/app/globals.css",
+  "cSpell.words": [
+    "Tabler"
+  ]
 }

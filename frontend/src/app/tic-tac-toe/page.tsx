@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button, SegmentedControl } from '@mantine/core';
+import { Button, Group, Modal, SegmentedControl, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
 import {
@@ -36,6 +37,7 @@ export default function TicTacToe() {
     const [isStarted, setIsStarted] = useState<boolean>(false);
     const [humanPlayer, setHumanPlayer] = useState<Player>(CIRCLE);
     const cpuPlayer: Player = humanPlayer === CIRCLE ? CROSS : CIRCLE;
+    const [resetModalOpened, resetModal] = useDisclosure(false);
 
     const currentPlayer: Player = getCurrentPlayer(board);
     const winner: Player | null = getWinner(board);
@@ -100,6 +102,7 @@ export default function TicTacToe() {
     const handleReset = () => {
         setIsStarted(false);
         setBoard(createEmptyBoard());
+        resetModal.close();
     };
 
     const handleReplay = () => {
@@ -113,7 +116,7 @@ export default function TicTacToe() {
         handleButtonClick = handleStarted;
     } else if (isPlaying) {
         buttonLabel = 'リセット';
-        handleButtonClick = handleReset;
+        handleButtonClick = resetModal.open;
     } else {
         buttonLabel = 'リプレイ';
         handleButtonClick = handleReplay;
@@ -189,6 +192,22 @@ export default function TicTacToe() {
                 )}
             </div>
             <Button onClick={handleButtonClick}>{buttonLabel}</Button>
+            <Modal
+                opened={resetModalOpened}
+                onClose={resetModal.close}
+                title="ゲームをリセットしますか？"
+                centered
+            >
+                <Text size="sm">この操作は取り消せません</Text>
+                <Group justify="flex-end" mt="md">
+                    <Button variant="default" onClick={resetModal.close}>
+                        キャンセル
+                    </Button>
+                    <Button color="red" onClick={handleReset}>
+                        リセット
+                    </Button>
+                </Group>
+            </Modal>
         </div>
     );
 }
