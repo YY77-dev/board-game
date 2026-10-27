@@ -6,6 +6,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
 import {
+    type Board,
+    type Coordinate,
     type Line,
     type Player,
     CIRCLE,
@@ -30,10 +32,10 @@ const CROSS_MARK: TablerIcon = MARK_ICONS[CROSS];
 const CELL_CENTER: number = 0.5;
 const LINE_EXTENSION: number = 0.4;
 
-const CPU_DELAY_MS = 500;
+const CPU_DELAY_MS: number = 500;
 
 export default function TicTacToe() {
-    const [board, setBoard] = useState(createEmptyBoard);
+    const [board, setBoard] = useState<Board>(createEmptyBoard);
     const [isStarted, setIsStarted] = useState<boolean>(false);
     const [humanPlayer, setHumanPlayer] = useState<Player>(CIRCLE);
     const cpuPlayer: Player = humanPlayer === CIRCLE ? CROSS : CIRCLE;
@@ -83,17 +85,17 @@ export default function TicTacToe() {
     };
 
     useEffect(() => {
-        if (!isCpuTurn) return;
+        if (!isCpuTurn || resetModalOpened) return;
 
         const cpuTurnTimer = setTimeout(() => {
-            const cpuMove = getRandomMove(board);
+            const cpuMove: Coordinate | null = getRandomMove(board);
             if (cpuMove !== null) {
                 setBoard(play(board, cpuMove[0], cpuMove[1]));
             }
         }, CPU_DELAY_MS);
 
         return () => clearTimeout(cpuTurnTimer);
-    }, [board, isCpuTurn]);
+    }, [board, isCpuTurn, resetModalOpened]);
 
     const handleStarted = () => {
         setIsStarted(true);
