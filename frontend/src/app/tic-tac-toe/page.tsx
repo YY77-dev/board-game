@@ -1,20 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Group, Modal, SegmentedControl, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
 import {
-    CIRCLE,
-    CROSS,
     type Line,
     type Player,
+    CIRCLE,
+    CROSS,
     createEmptyBoard,
     getCurrentPlayer,
     getRandomMove,
-    getWinningLine,
     getWinner,
+    getWinningLine,
     isDraw,
     play,
 } from '@/games/tic-tac-toe/logic';
