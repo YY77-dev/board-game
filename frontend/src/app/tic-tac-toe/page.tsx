@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Group, Modal, SegmentedControl, Text } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
 import MarkIcon from '@/components/tic-tac-toe/MarkIcon';
+import ResetModal from '@/components/tic-tac-toe/ResetModal';
+import TurnOrderSelector from '@/components/tic-tac-toe/TurnOrderSelector';
+import WinningLine from '@/components/tic-tac-toe/WinningLine';
 import {
     type Board,
     type Coordinate,
@@ -20,9 +23,6 @@ import {
     isDraw,
     play,
 } from '@/lib/tic-tac-toe/logic';
-
-const CELL_CENTER: number = 0.5;
-const LINE_EXTENSION: number = 0.4;
 
 const CPU_DELAY_MS: number = 500;
 
@@ -57,18 +57,6 @@ export default function TicTacToe() {
     }
 
     const winningLine: Line | null = getWinningLine(board);
-    const winningLineStartRow: number = winningLine?.[0][0] ?? 0;
-    const winningLineStartCol: number = winningLine?.[0][1] ?? 0;
-    const winningLineEndRow: number = winningLine?.[2][0] ?? 0;
-    const winningLineEndCol: number = winningLine?.[2][1] ?? 0;
-
-    const directionRow: number = Math.sign(winningLineEndRow - winningLineStartRow);
-    const directionCol: number = Math.sign(winningLineEndCol - winningLineStartCol);
-
-    const startRow: number = winningLineStartRow + CELL_CENTER - LINE_EXTENSION * directionRow;
-    const startCol: number = winningLineStartCol + CELL_CENTER - LINE_EXTENSION * directionCol;
-    const endRow: number = winningLineEndRow + CELL_CENTER + LINE_EXTENSION * directionRow;
-    const endCol: number = winningLineEndCol + CELL_CENTER + LINE_EXTENSION * directionCol;
 
     const handlePlay = (rowIndex: number, colIndex: number) => {
         if (isCpuTurn) return;
@@ -118,29 +106,7 @@ export default function TicTacToe() {
     return (
         <div className="flex flex-col items-center">
             <h1>Tic Tac Toe</h1>
-            <SegmentedControl
-                value={humanPlayer}
-                onChange={setHumanPlayer}
-                disabled={isPlaying}
-                data={[
-                    {
-                        label: (
-                            <span className="flex items-center justify-center gap-1">
-                                先攻 :<MarkIcon mark={CIRCLE} size={16} />
-                            </span>
-                        ),
-                        value: CIRCLE,
-                    },
-                    {
-                        label: (
-                            <span className="flex items-center justify-center gap-1">
-                                後攻 :<MarkIcon mark={CROSS} size={16} />
-                            </span>
-                        ),
-                        value: CROSS,
-                    },
-                ]}
-            />
+            <TurnOrderSelector value={humanPlayer} onChange={setHumanPlayer} disabled={isPlaying} />
             <p className="flex min-h-7 items-center">
                 {statusMark !== null && <MarkIcon mark={statusMark} size={18} />}
                 {statusText}
@@ -162,43 +128,14 @@ export default function TicTacToe() {
                         });
                     })}
                 </div>
-                {winningLine && (
-                    <svg
-                        viewBox="0 0 3 3"
-                        className="pointer-events-none absolute inset-0 h-full w-full"
-                    >
-                        <line
-                            x1={startCol}
-                            y1={startRow}
-                            x2={endCol}
-                            y2={endRow}
-                            pathLength={1}
-                            strokeDasharray={1}
-                            stroke="red"
-                            strokeWidth={0.1}
-                            strokeLinecap="round"
-                            className="draw-line"
-                        />
-                    </svg>
-                )}
+                {winningLine !== null && <WinningLine line={winningLine} />}
             </div>
             <Button onClick={handleButtonClick}>{buttonLabel}</Button>
-            <Modal
+            <ResetModal
                 opened={resetModalOpened}
                 onClose={resetModal.close}
-                title="ゲームをリセットしますか？"
-                centered
-            >
-                <Text size="sm">この操作は取り消せません</Text>
-                <Group justify="flex-end" mt="md">
-                    <Button variant="default" onClick={resetModal.close}>
-                        キャンセル
-                    </Button>
-                    <Button color="red" onClick={handleReset}>
-                        リセット
-                    </Button>
-                </Group>
-            </Modal>
+                onConfirm={handleReset}
+            />
         </div>
     );
 }
