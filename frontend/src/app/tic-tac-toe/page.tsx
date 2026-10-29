@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@mantine/core';
+import { Button, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
-import MarkIcon from '@/components/tic-tac-toe/MarkIcon';
+import BoardSurface from '@/components/tic-tac-toe/BoardSurface';
 import ResetModal from '@/components/tic-tac-toe/ResetModal';
+import StatusMessage from '@/components/tic-tac-toe/StatusMessage';
 import TurnOrderSelector from '@/components/tic-tac-toe/TurnOrderSelector';
-import WinningLine from '@/components/tic-tac-toe/WinningLine';
 import {
     type Board,
     type Coordinate,
@@ -39,22 +39,6 @@ export default function TicTacToe() {
     const isGameOver: boolean = winner !== null || isTieGame;
     const isPlaying: boolean = isStarted && !isGameOver;
     const isCpuTurn: boolean = isPlaying && currentPlayer === cpuPlayer;
-
-    let statusMark: Player | null;
-    let statusText: string;
-    if (!isStarted) {
-        statusMark = null;
-        statusText = '';
-    } else if (winner !== null) {
-        statusMark = winner;
-        statusText = 'の勝ち！';
-    } else if (isTieGame) {
-        statusMark = null;
-        statusText = '引き分け！';
-    } else {
-        statusMark = currentPlayer;
-        statusText = 'の番';
-    }
 
     const winningLine: Line | null = getWinningLine(board);
 
@@ -105,31 +89,22 @@ export default function TicTacToe() {
 
     return (
         <div className="flex flex-col items-center">
-            <h1>Tic Tac Toe</h1>
+            <Title order={2} className="mb-3">
+                Tic Tac Toe
+            </Title>
             <TurnOrderSelector value={humanPlayer} onChange={setHumanPlayer} disabled={isPlaying} />
-            <p className="flex min-h-7 items-center">
-                {statusMark !== null && <MarkIcon mark={statusMark} size={18} />}
-                {statusText}
-            </p>
-            <div className="relative w-fit">
-                <div className="grid grid-cols-3">
-                    {board.map((row, rowIndex) => {
-                        return row.map((cell, colIndex) => {
-                            return (
-                                <button
-                                    key={`${rowIndex}-${colIndex}`}
-                                    onClick={() => handlePlay(rowIndex, colIndex)}
-                                    disabled={!isPlaying || isCpuTurn}
-                                    className="flex h-25 w-25 items-center justify-center"
-                                >
-                                    {cell !== null && <MarkIcon mark={cell} size={48} />}
-                                </button>
-                            );
-                        });
-                    })}
-                </div>
-                {winningLine !== null && <WinningLine line={winningLine} />}
-            </div>
+            <StatusMessage
+                isStarted={isStarted}
+                winner={winner}
+                isTieGame={isTieGame}
+                currentPlayer={currentPlayer}
+            />
+            <BoardSurface
+                board={board}
+                onPlay={handlePlay}
+                disabled={!isPlaying || isCpuTurn}
+                winningLine={winningLine}
+            />
             <Button onClick={handleButtonClick}>{buttonLabel}</Button>
             <ResetModal
                 opened={resetModalOpened}
