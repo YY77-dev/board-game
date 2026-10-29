@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
-import { AppLayout } from '@/components/common/layout/AppLayout';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 export const metadata: Metadata = {
     title: 'My App',

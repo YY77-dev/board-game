@@ -19,7 +19,7 @@ import {
     getWinningLine,
     isDraw,
     play,
-} from '@/games/tic-tac-toe/logic';
+} from '@/lib/tic-tac-toe/logic';
 
 const MARK_ICONS: Record<Player, TablerIcon> = {
     O: IconCircle,
