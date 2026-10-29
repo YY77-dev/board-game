@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Group, Modal, SegmentedControl, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
+import MarkIcon from '@/components/tic-tac-toe/MarkIcon';
 import {
     type Board,
     type Coordinate,
@@ -20,14 +20,6 @@ import {
     isDraw,
     play,
 } from '@/lib/tic-tac-toe/logic';
-
-const MARK_ICONS: Record<Player, TablerIcon> = {
-    O: IconCircle,
-    X: IconX,
-};
-
-const CIRCLE_MARK: TablerIcon = MARK_ICONS[CIRCLE];
-const CROSS_MARK: TablerIcon = MARK_ICONS[CROSS];
 
 const CELL_CENTER: number = 0.5;
 const LINE_EXTENSION: number = 0.4;
@@ -63,7 +55,6 @@ export default function TicTacToe() {
         statusMark = currentPlayer;
         statusText = 'の番';
     }
-    const StatusIcon: TablerIcon | null = statusMark === null ? null : MARK_ICONS[statusMark];
 
     const winningLine: Line | null = getWinningLine(board);
     const winningLineStartRow: number = winningLine?.[0][0] ?? 0;
@@ -135,7 +126,7 @@ export default function TicTacToe() {
                     {
                         label: (
                             <span className="flex items-center justify-center gap-1">
-                                先攻 :<CIRCLE_MARK size={16} />
+                                先攻 :<MarkIcon mark={CIRCLE} size={16} />
                             </span>
                         ),
                         value: CIRCLE,
@@ -143,7 +134,7 @@ export default function TicTacToe() {
                     {
                         label: (
                             <span className="flex items-center justify-center gap-1">
-                                後攻 :<CROSS_MARK size={16} />
+                                後攻 :<MarkIcon mark={CROSS} size={16} />
                             </span>
                         ),
                         value: CROSS,
@@ -151,15 +142,13 @@ export default function TicTacToe() {
                 ]}
             />
             <p className="flex min-h-7 items-center">
-                {StatusIcon && <StatusIcon size={18} />}
+                {statusMark !== null && <MarkIcon mark={statusMark} size={18} />}
                 {statusText}
             </p>
             <div className="relative w-fit">
                 <div className="grid grid-cols-3">
                     {board.map((row, rowIndex) => {
                         return row.map((cell, colIndex) => {
-                            const MarkIcon: TablerIcon | null =
-                                cell === null ? null : MARK_ICONS[cell];
                             return (
                                 <button
                                     key={`${rowIndex}-${colIndex}`}
@@ -167,7 +156,7 @@ export default function TicTacToe() {
                                     disabled={!isPlaying || isCpuTurn}
                                     className="flex h-25 w-25 items-center justify-center"
                                 >
-                                    {MarkIcon && <MarkIcon size={48} />}
+                                    {cell !== null && <MarkIcon mark={cell} size={48} />}
                                 </button>
                             );
                         });
