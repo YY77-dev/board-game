@@ -1,6 +1,6 @@
 import { type TablerIcon, IconCircle, IconX } from '@tabler/icons-react';
 
-import { type Player } from '@/lib/tic-tac-toe/logic';
+import { type Player, CIRCLE, CROSS } from '@/lib/tic-tac-toe/logic';
 
 type MarkIconProps = {
     mark: Player;
@@ -8,8 +8,8 @@ type MarkIconProps = {
 };
 
 const MARK_ICONS: Record<Player, TablerIcon> = {
-    O: IconCircle,
-    X: IconX,
+    [CIRCLE]: IconCircle,
+    [CROSS]: IconX,
 };
 
 export default function MarkIcon({ mark, size }: MarkIconProps) {

@@ -9,30 +9,33 @@ type TurnOrderSelectorProps = {
     disabled: boolean;
 };
 
+type TurnOrderOption = {
+    order: string;
+    mark: Player;
+};
+
+const TURN_ORDER_OPTIONS: TurnOrderOption[] = [
+    { order: '先攻', mark: CIRCLE },
+    { order: '後攻', mark: CROSS },
+];
+
 export default function TurnOrderSelector({ value, onChange, disabled }: TurnOrderSelectorProps) {
     return (
         <SegmentedControl<Player>
             value={value}
             onChange={onChange}
             disabled={disabled}
-            data={[
-                {
+            data={TURN_ORDER_OPTIONS.map((option) => {
+                return {
+                    value: option.mark,
                     label: (
                         <span className="flex items-center justify-center gap-1">
-                            先攻 :<MarkIcon mark={CIRCLE} size={16} />
+                            {option.order} :
+                            <MarkIcon mark={option.mark} size={16} />
                         </span>
                     ),
-                    value: CIRCLE,
-                },
-                {
-                    label: (
-                        <span className="flex items-center justify-center gap-1">
-                            後攻 :<MarkIcon mark={CROSS} size={16} />
-                        </span>
-                    ),
-                    value: CROSS,
-                },
-            ]}
+                };
+            })}
         />
     );
 }

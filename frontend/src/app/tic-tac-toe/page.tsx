@@ -54,7 +54,8 @@ export default function TicTacToe() {
         const cpuTurnTimer = setTimeout(() => {
             const cpuMove: Coordinate | null = getRandomMove(board);
             if (cpuMove !== null) {
-                setBoard(play(board, cpuMove[0], cpuMove[1]));
+                const [rowIndex, colIndex] = cpuMove;
+                setBoard(play(board, rowIndex, colIndex));
             }
         }, CPU_DELAY_MS);
 
