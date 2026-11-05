@@ -3,9 +3,9 @@
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
-import Footer from '@/components/common/layout/Footer';
-import Header from '@/components/common/layout/Header';
-import Navbar from '@/components/common/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import Navbar from '@/components/layout/Navbar';
 
 export function AppLayout({
     children,
