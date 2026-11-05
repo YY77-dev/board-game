@@ -12,7 +12,13 @@ const MARK_ICONS: Record<Player, TablerIcon> = {
     [CROSS]: IconX,
 };
 
+const MARK_COLOR_CLASSES: Record<Player, string> = {
+    [CIRCLE]: 'text-ttt-circle',
+    [CROSS]: 'text-ttt-cross',
+};
+
 export default function MarkIcon({ mark, size }: MarkIconProps) {
     const Icon: TablerIcon = MARK_ICONS[mark];
-    return <Icon size={size} />;
+    const colorClass: string = MARK_COLOR_CLASSES[mark];
+    return <Icon size={size} className={colorClass} />;
 }

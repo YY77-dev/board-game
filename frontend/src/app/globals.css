@@ -16,6 +16,38 @@
 @custom-variant dark (&:where([data-mantine-color-scheme='dark'], [data-mantine-color-scheme='dark'] *));
 
 /*
+ * ○×ゲームの配色(ライトモード)。
+ * @theme に --color- で始まる名前で書くと、bg-ttt-grid や text-ttt-circle のようなクラスで使える。
+ * 勝ったマスと勝ちラインは、勝ったマークに合わせて色を分ける。
+ */
+@theme {
+    --color-ttt-grid: #d3dae3;
+    --color-ttt-cell: #ffffff;
+    --color-ttt-circle: #ea580c;
+    --color-ttt-cross: #2563eb;
+    --color-ttt-winning-cell-circle: #ffedd5;
+    --color-ttt-winning-cell-cross: #dbeafe;
+    --color-ttt-winning-line-circle: #c2410c;
+    --color-ttt-winning-line-cross: #1d4ed8;
+}
+
+/*
+ * ダークモードの配色。Mantine が <html> に付ける data-mantine-color-scheme='dark' で、同じ変数を上書きする。
+ * クラスは色の値ではなく変数を参照しているので、使う側を変えなくても色が切り替わる。
+ * theme レイヤーに入る @theme の値より優先させるため、レイヤーの外に書く。
+ */
+:root[data-mantine-color-scheme='dark'] {
+    --color-ttt-grid: #263247;
+    --color-ttt-cell: #172033;
+    --color-ttt-circle: #fb923c;
+    --color-ttt-cross: #60a5fa;
+    --color-ttt-winning-cell-circle: #3b2412;
+    --color-ttt-winning-cell-cross: #1e3a5f;
+    --color-ttt-winning-line-circle: #fed7aa;
+    --color-ttt-winning-line-cross: #bfdbfe;
+}
+
+/*
  * 勝った並びの線を、端から引いていくように表示するアニメーション。
  * <line> に pathLength={1} と strokeDasharray={1} を付けて使う前提で、
  * 破線の模様のずれを 0 に戻していくと、線が伸びて見える。
